@@ -181,6 +181,10 @@ phase2() {
   need_root
   local app="/usr/src/astercc-4.1"
 
+  log "===== 2.0 再次关闭防火墙（asterCC 脚本会复活 firewalld，导致宿主机访问不到 Web） ====="
+  systemctl stop firewalld 2>/dev/null || true
+  systemctl disable firewalld 2>/dev/null || true
+
   log "===== 2.1 Web 目录软链（否则 404） ====="
   [ -e /var/www/html/asterCC ] && [ ! -L /var/www/html/asterCC ] && mv /var/www/html/asterCC /var/www/html/asterCC.empty
   ln -sfn "$app" /var/www/html/asterCC
@@ -256,7 +260,7 @@ phase_verify() {
   echo ""
   printf "%-24s" "Asterisk 版本:"; asterisk -V 2>/dev/null || echo "未安装"
   printf "%-24s" "Asterisk 服务:"; systemctl is-active asterisk 2>/dev/null || true
-  printf "%-24s" "MySQL 版本:"; mysql -u root -N -e 'select version();' 2>/dev/null || echo "失败"
+  printf "%-24s" "MySQL 版本:"; mysql -u root -p"${MYSQL_ROOT_PASS}" -N -e 'select version();' 2>/dev/null || echo "失败"
   printf "%-24s" "astercc10 表数:"; mysql -u astercc -p'asterccsecret' -N -e "use astercc10; show tables;" 2>/dev/null | wc -l
   printf "%-24s" "Web HTTP:"; curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1 2>/dev/null || echo "失败"
   echo ""
