@@ -13,16 +13,20 @@ asterCC 官方一键安装脚本是 2012-2021 年的产物，依赖一整套已�
 ## 文件结构
 
 ```
-astercc-deploy/
-├── README.md             本说明
-├── deploy.sh             主部署脚本（preflight / phase1 / phase2 / verify）
-├── .env.example          密码配置模板
+astriskCC/
+├── README.md               本说明
+├── deploy.sh               主部署脚本（preflight / phase1 / phase2 / verify）
+├── .env.example            密码配置模板
+├── .gitignore              排除真实密码与大文件
+├── 推送到GitHub.md         推送操作记录
 └── docs/
-    ├── 最终部署文档.md    干净的重装指南（推荐先看）
-    ├── 最终部署文档.html
-    ├── 排错手册.md        完整排错记录（遇到问题时查）
-    └── ViciBox12部署清单.md  正式方案
+    ├── 最终部署文档.md      干净的重装指南（推荐先看）
+    ├── 排错手册.md          完整排错记录（遇到问题时查）
+    ├── ViciBox12部署清单.md 正式方案
+    └── md2html.py           文档转 HTML 工具
 ```
+
+> 提示：文档可在本地用 `python3 docs/md2html.py docs/最终部署文档.md 输出.html` 转成 HTML 阅读版。
 
 ## 快速开始
 
@@ -34,7 +38,7 @@ astercc-deploy/
 3. 以 root 登录，把本仓库拉下来：
    ```bash
    yum install -y git   # 若没装 git（换源前可能装不上，见下方说明）
-   git clone <你的仓库地址> /root/astercc-deploy
+   git clone https://github.com/dai1991/astriskCC.git /root/astercc-deploy
    cd /root/astercc-deploy
    ```
 
@@ -122,7 +126,7 @@ asterisk -V    # 应输出 Asterisk 1.8.32.3
 ### 第 3 步：阶段 2（补齐应用层收尾）
 
 ```bash
-cd /root/astercc-deploy && source .env
+cd /root/astercc-deploy && source .env   # clone 后的本地目录名，可自定义
 bash deploy.sh phase2
 ```
 
